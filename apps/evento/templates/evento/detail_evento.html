@@ -1,0 +1,903 @@
+<!--modificado los datos de la tabla de inscripciones y el excel  -->
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %} Evento | Acreditador{% endblock %}
+
+{% block moreCSS %}
+<link rel="stylesheet" href="{% static 'evento/css/evento-detail.css' %}">
+
+<style>
+    @-webkit-keyframes rotating /* Safari and Chrome */
+    {
+        from {
+            -webkit-transform: rotate(0deg);
+            -o-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+        to {
+            -webkit-transform: rotate(360deg);
+            -o-transform: rotate(360deg);
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes rotating {
+        from {
+            -ms-transform: rotate(0deg);
+            -moz-transform: rotate(0deg);
+            -webkit-transform: rotate(0deg);
+            -o-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+        to {
+            -ms-transform: rotate(360deg);
+            -moz-transform: rotate(360deg);
+            -webkit-transform: rotate(360deg);
+            -o-transform: rotate(360deg);
+            transform: rotate(360deg);
+        }
+    }
+
+    .rotating {
+        -webkit-animation: rotating 2s linear infinite;
+        -moz-animation: rotating 2s linear infinite;
+        -ms-animation: rotating 2s linear infinite;
+        -o-animation: rotating 2s linear infinite;
+        animation: rotating 2s linear infinite;
+    }
+</style>
+{% endblock %}
+
+
+{% block header_special %}
+<a class="navbar-brand ml-2 btn btn-light shadow-sm" href="{% url 'principal' %}">
+    <i class="fas fa-arrow-left"></i> <span class="ml-2 " style="font-size: 16px;">Eventos</span>
+</a>
+{% endblock %}
+
+
+{% block content %}
+
+<!-- Modal Asignar Usuario -->
+<div class="modal fade" id="AgregarAsistente" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Agregando asistente</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="POST" id="formularioInscripcion">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label for="id_identificador"><b>RUN <span
+                                style="color: red">*</span></b></label>
+                        {{ form_asistente.identificador }}
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="id_nombre"><b>{{ form_asistente.nombre.label }}
+                                <!-- <span style="color: red">*</span>--></b></label>
+                            {{ form_asistente.nombre }}
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="id_apellido"><b>{{ form_asistente.apellido.label }}
+                                <!-- <span style="color: red">*</span>--></b></label>
+                            {{ form_asistente.apellido }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_email"><b>{{ form_asistente.email.label }}</b></label>
+                        {{ form_asistente.email }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_telefono"><b>{{ form_asistente.telefono.label }}</b></label>
+                        {{ form_asistente.telefono }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_grupo"><b>{{ form_asistente.grupo.label }}</b></label>
+                        {{ form_asistente.grupo }}
+                    </div>
+                    <div class="form-group" id="form_otro_grupo">
+                        <label for="id_otro_grupo"><b>{{ form_asistente.otro_grupo.label }} <span
+                                style="color: red">*</span>
+                        </b></label>
+                        {{ form_asistente.otro_grupo }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_validador"><b>Acreditar?</b></label>
+                        {{ form_asistente.validador }}
+                    </div>
+                    <button type="submit" name="agregar_asistente" class="btn btn-acreditador ml-2 w-25">Agregar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal Eliminar Evento -->
+<div class="modal fade" id="EliminarEvento" tabindex="-1" role="dialog" aria-labelledby="EliminarEvento"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Atencion!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ¿Desea eliminar el evento <b>{{ evento.titulo }}</b> ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <a href="{% url 'eliminar_evento' evento.id %}" class="btn btn-danger">Eliminar Evento</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<section class="main mb-5">
+
+
+    <div class="contenedor">
+        <div class="header_content">
+            <div class="info-titulo">
+                <p class="titulo_conte">{{ evento.titulo|truncatechars:30|title }}</p>
+                <p class="titulo_descripcion">{{ evento.descripcion }}</p>
+                <p class="titulo_descripcion" style="color: #000">
+                	<b>Sede:</b>{{ evento.sede }} - 
+                	<b>Escuela:</b>{{ evento.escuela }} - 
+                	<b>Dirección:</b> {{ evento.area }} 
+                </p>
+            </div>
+
+            <div class="btns-header">
+                <div>
+                    <a class="btn-header btn btn-primary" href="{% url 'actualizar-evento' evento.pk %}">Modificar</a>
+                    <button type="button" class="btn-header btn btn-danger btn-eliminar"
+                            style="box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.18); margin-left: 10px" data-toggle="modal"
+                            data-target="#EliminarEvento">
+                        Eliminar
+                    </button>
+                </div>
+
+
+                <div class="custom-control custom-switch ml-3  switch_disp">
+                    <input type="checkbox" class="custom-control-input" id="SwitchDispo"
+                           data-url-update="{% url 'cambiar-disponibilidad' evento.id %}"
+                           onchange="checkDisponibilidad(this)"
+
+                           {% if evento.config.ver_disp %}
+                           checked
+                           {% endif %}
+
+                    >
+                    <label class="custom-control-label" for="SwitchDispo"> Deshablitar inscripciones</label>
+                </div>
+            </div>
+
+            <div class="info-evento">
+                <div class="info info-codigo">
+                    <img src="{% static 'evento/img/Evento_detail/gato.svg' %}" width="16px" alt="Codigo de evento">
+                    <button class="btn-clipboard btn btn-sm shadow-sm" style="background-color: #fff"
+                            data-toggle="tooltip" data-placement="top"
+                            title="Click para copiar" data-clipboard-text="{{ evento.codigo }}"><span
+                            style="color: #000;"><b>{{ evento.codigo }}</b></span></button>
+                </div>
+                <div class="info info-codigo">
+                    <img src="{% static 'evento/img/Evento_detail/gato.svg' %}" width="16px" alt="URL de evento">
+                    <button class="btn-clipboardDos btn btn-sm shadow-sm" style="background-color: #fff"
+                            data-toggle="tooltip" data-placement="top"
+                            title="Click para copiar"
+                            data-clipboard-text="{{ urlweb }}{% url 'formulario_inscripcion' evento.id %}"><span
+                            style="color: #000;"><b>Link de registro</b></span></button>
+                </div>
+                <div class="info info-fecha">
+                    <img src="{% static 'evento/img/Evento_detail/calendar.svg' %}" width="16px"
+                         alt="Fecha del evento">
+                    <p>{{ evento.fecha }}</p>
+                </div>
+                {% comment %}
+                <div class="info info-asistentes">
+                    <img src="{% static 'evento/img/Evento_detail/people.svg' %}" width="16px"
+                         alt="Codigo de evento">
+                    <p>{{ evento.Asistentes.count }} Inscritos</p>
+                </div>
+                {% endcomment %}
+                <div class="info info-lugar">
+                    <img src="{% static 'evento/img/Evento_detail/place.svg' %}" width="16px"
+                         alt="Codigo de evento">
+                    <p>{% if evento.lugar %}
+                        {{ evento.lugar }}
+
+                        {% endif %}
+
+                        {% if evento.direccion %}
+                        {{ evento.direccion}}
+                        {% endif %}</p>
+                </div>
+                <div class="info info-tiempo">
+                    <img src="{% static 'evento/img/Evento_detail/time.svg' %}" width="16px"
+                         alt="Hora de Inicio y fin">
+                    <p>
+                        Inicio: {% if evento.hora_inicio %}{{ evento.hora_inicio }}{% else %} N/E{% endif %} - Fin:
+                        {% if evento.hora_fin %}{{ evento.hora_fin }}{% else %} N/E{% endif %}
+                    </p>
+                </div>
+
+                <hr class="line-header" size="30">
+            </div>
+        </div>
+    </div>
+
+    <!-- EXCEL UPLOAD -->
+
+    <div class="contenedor">
+        <div class="form-wrap"
+             style=" display: inline-block; border-radius: 12px; background: white; box-shadow: 0px 10px 40px -10px rgba(0,0,0,0.19); padding: 30px 20px">
+            <form action="" method="post" id="formExcel" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label style="display: block; padding-bottom: .5em; margin-bottom: .5em; font-size: 1.2em; font-weight: bold">
+                    Importar asistentes <span style="color: red">*Beta</span> <br> <a style=" font-size: 14px" href="https://drive.google.com/file/d/1bgF6CtYn-kVSRUSxR5bc4XW2q1Tp47jT/view" target="_blank">Descargar instrucciones de uso.</a> </label>
+
+
+                <p id="verifyAlert" style=" display: none ">Verificando <img class="rotating"
+                                                                             style="margin-left: 5px; width: 18px"
+                                                                             src="{% static 'evento/img/loading.png' %}"
+                                                                             alt="loading"></p>
+                <p id="uploadingAlert" style=" display: none ">Inscribiendo <img class="rotating"
+                                                                                 style="margin-left: 5px; width: 18px"
+                                                                                 src="{% static 'evento/img/loading.png' %}"
+                                                                                 alt="loading"></p>
+                <p id="readyAlert" style=" display: none ">Listo! Es necesario recargar el evento</p>
+                <p id="errorAlert" style=" display: none ">Error! </p>
+
+                <input style="width: 100%; border-radius: 5px; box-shadow: inset 0 2px 4px 0 rgba(0,0,0,.19); font-size: 14px; box-sizing: border-box; border: 1px solid rgba(0,0,0,0.19);margin-bottom: 1em; outline: 0 "
+                       type="file" name="excel" id="excel">
+
+
+                <button id="btnExcel" disabled style="display: block" class="btn-header btn btn-primary" type="submit">
+                    Enviar
+                </button>
+
+            </form>
+        </div>
+    </div>
+
+
+    <div class="contenedor2 card_content">
+        <div class="card">
+            <img src="{% static 'evento/img/Evento_detail/data/peopleData.svg' %}" alt="Personas en el evento">
+            <div class="data-card-info">
+                <p class="title-data">
+                    Número de inscritos
+                </p>
+                <p class="data-value">
+                    {{ evento.Asistentes.count }}
+                </p>
+            </div>
+        </div>
+        <div class="card">
+            <img src="{% static 'evento/img/Evento_detail/data/ConfirmedData.svg' %}" alt="Personas en el evento">
+            <div class="data-card-info">
+                <p class="title-data">
+                    Número de acreditados
+                </p>
+                <p class="data-value">
+                    {{ acreditados.count }}
+                </p>
+            </div>
+        </div>
+        <div class="card">
+            <img src="{% static 'evento/img/Evento_detail/data/LateData.svg' %}" alt="Personas en el evento">
+            <div class="data-card-info">
+                <p class="title-data">
+                    Número de ausentes
+                </p>
+                <p class="data-value">
+                    {{ ausentes.count }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="contenedor2 tablas mt-3">
+
+        <div class="table-content-total tablet-content-asistentes">
+
+            {% include 'base/messages.html' %}
+
+            <div class="header-table-content mb-3">
+                <p class="title-table">Total de Asistentes</p>
+                <div class="botnoesAccion">
+                    <!--                        <a class="btn btn-primary" href="#"> Generar Excel</a>-->
+                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                            data-target="#AgregarAsistente">
+                        Agregar asistente
+                    </button>
+                </div>
+            </div>
+
+            <table class="table table-total table-hover table-striped" style="min-height: 200px;">
+                <thead>
+                <tr>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Fecha de inscripción</th>
+                    <th scope="col">RUN</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Teléfono</th>
+                    <th scope="col">Grupo</th>
+                    <th scope="col">Acreditación</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% if asistentes %}
+                {% for asis in asistentes %}
+                <tr>
+                    <th scope="row">
+                        {% if asis.validador %}
+                        <span class="badge badge-pill badge-success">Acreditado</span>
+                        {% else %}
+                        <span class="badge badge-pill badge-danger">No Acreditado</span>
+                        {% endif %}
+                    </th>
+                    <td>{{ asis.created }}</td>
+                    <td>{{ asis.identificador }}</td>
+                    <td>{{ asis.nombre }} {{ asis.apellido }}</td>
+                    <td>{% if asis.email %} {{ asis.email }} {% else %} - {% endif %}</td>
+                    <td>{% if asis.telefono %}
+                        {{ asis.telefono }}
+                        {% else %} No especificado {% endif %}
+                    </td>
+                    <td>{% if asis.grupo %}
+                        {{ asis.grupo }}
+                        {% if asis.grupo == "Otros" %}
+                        {% if asis.otro_grupo %}
+                        {{ asis.otro_grupo }}
+                        {% else %}
+                        -
+                        {% endif %}
+                        {% endif %}
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="dropdown pt-2 pb-2 pl-2 pr-2">
+                            <a class="btn btn-secondary btn-sm dropdown-toggle" href="#" role="button"
+                               id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                               aria-expanded="false">
+                                Opciones
+                            </a>
+
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                <div class="px-4 py-3">
+                                    <a href="{% url 'acreditar-asistentes' asis.evento.id asis.id %}"
+                                       class="btn btn-block btn-primary ">Acreditar</a>
+
+                                    <a href="{% url 'desacreditar_asistente' asis.evento.id asis.id %}"
+                                       class="btn btn-block  btn-warning ">Desacreditar</a>
+
+                                    <a href="{% url 'eliminar_asistente' asis.evento.id asis.id %}"
+                                       class="btn btn-block  btn-danger ">Eliminar</a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% endif %}
+
+                </tbody>
+            </table>
+        </div>
+        <div class="table-content tablet-content-acreditados">
+
+            <div class="header-table-content">
+                <p class="title-table">Lista de Acreditados </p>
+            </div>
+
+            <table class="table table-asistentes table-hover table-striped">
+
+                <thead>
+                <tr>
+                    <th scope="col">Nro</th>
+                    <th scope="col">RUN</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Teléfono</th>
+                    <th scope="col">Grupo</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if acreditados %}
+                {% for acredi in acreditados %}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{% if acredi.identificador %}{{ acredi.identificador }}{% else %}-{% endif %}</td>
+                    <td>{{ acredi.nombre }} {{ acredi.apellido }}</td>
+                    <td>{% if acredi.email %}{{ acredi.email }}{% else %}N/E{% endif %}</td>
+                    <td>{% if acredi.telefono %}{{ acredi.telefono }}{% else %}N/E{% endif %}</td>
+                    <td>{% if acredi.grupo %}{{ acredi.grupo }}{% else %}N/E{% endif %}</td>
+                </tr>
+                {% endfor %}
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+        <div class="table-content tablet-content-ausentes">
+            <div class="header-table-content">
+                <p class="title-table">Lista de ausentes</p>
+            </div>
+
+            <table class="table table-ausentes table-hover table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">Nro</th>
+                    <th scope="col">RUN</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Teléfono</th>
+                    <th scope="col">Grupo</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if ausentes %}
+                {% for ause in ausentes %}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{% if ause.identificador %}{{ ause.identificador }}{% else %}-{% endif %}</td>
+                    <td>{{ ause.nombre }} {{ ause.apellido }}</td>
+                    <td>{% if ause.email %}{{ ause.email }}{% else %}N/E{% endif %}</td>
+                    <td>{% if ause.telefono %}{{ ause.telefono }}{% else %}N/E{% endif %}</td>
+                    <td>{% if ause.grupo %}{{ ause.grupo }}{% else %}N/E{% endif %}</td>
+                </tr>
+                {% endfor %}
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block moreJS %}
+
+
+<script>
+
+    var getFecha = () => {
+        let fecha = new Date();
+        console.log(fecha)
+        let fechaString = fecha.getDate() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getFullYear();
+        console.log(fechaString)
+        return fechaString
+    }
+
+
+    // Switch
+
+    let switchDispo = document.querySelector('#SwitchDispo');
+    let switchDataValue = switchDispo.dataset.urlUpdate;
+
+    console.log(switchDataValue);
+
+    function checkDisponibilidad(e) {
+        window.location.href = switchDataValue;
+    }
+
+    $(document).ready(function () {
+
+        var nameEvent = document.getElementsByClassName("titulo_conte");
+
+        var nombreEvento = nameEvent[0].innerText;
+
+
+        $("#formularioInscripcion  select[name=grupo]").change(function () {
+            valor = $(this).val();
+            if ($(this).val() == "Otros") {
+                $("#form_otro_grupo").show();
+            } else {
+                $("#form_otro_grupo").hide();
+            }
+        });
+
+        $("#form_otro_grupo").hide();
+
+        //Config tabla de inscritos totales
+        /*
+        $('.table-total').DataTable({
+            "scrollY": "600px",
+            "scrollCollapse": true,
+            "lengthChange": false,
+            responsive: true,
+            paging: true,
+            dom: '<".flex-datetable"f>rtip',
+            buttons: [
+                {
+                    title: getFecha(),
+                    extend: 'excel',
+                    footer: false,
+                     exportOptions: {
+                        columns: [0, 1, 2, 3]
+                    }
+                }
+            ],
+            "language": {
+                "zeroRecords": "No se encontraron inscritos especificados",
+                "lengthMenu": "Mostrar _MENU_ Inscritos",
+                "emptyTable": "No se encuentran Asistentes",
+                "infoEmpty": "0 to 0 of 0 Inscritos",
+                "info": " _START_ de _END_ Inscritos _TOTAL_ ",
+                "infoFiltered": "(Filtrado de _MAX_ Inscritos)",
+                "search": "Buscar:",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Ultimo",
+                    "next": "Sig",
+                    "previous": "Prev"
+                }
+            }
+        });
+        */
+
+
+        $('.table-total').DataTable({
+            scrollY: "600px",
+            "scrollCollapse": true,
+            "lengthChange": false,
+            responsive: true,
+            paging: true,
+            dom: 'Bfrtip',
+            columnDefs: [
+                {
+                    targets: 1,
+                    className: 'noVis'
+                }
+            ],
+
+            buttons: [
+                {
+                    title: nombreEvento + "_" + getFecha(),
+                    extend: 'excel',
+                    footer: false,
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6]
+                    }
+                }
+            ],
+
+
+            "language": {
+                "zeroRecords": "No se encontraron inscritos especificados",
+                "lengthMenu": "Mostrar _MENU_ Inscritos",
+                "emptyTable": "No se encuentran Asistentes",
+                "infoEmpty": "0 to 0 of 0 Inscritos",
+                "info": " _START_ de _END_ Inscritos _TOTAL_ ",
+                "infoFiltered": "(Filtrado de _MAX_ Inscritos)",
+                "search": "Buscar:",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Ultimo",
+                    "next": "Sig",
+                    "previous": "Prev"
+                },
+            }
+        });
+
+        //Config tabla de acreditados
+        $('.table-asistentes').DataTable({
+            "scrollY": "600px",
+            "scrollCollapse": true,
+            "lengthChange": false,
+            responsive: true,
+            paging: true,
+            dom: '<"controls-datatable" l<".flex-datetable"f>rtip>',
+            buttons: [
+                {
+                    title: getFecha(),
+                    extend: 'excel',
+                    footer: false,
+                    exportOptions: {
+                        columns: [0, 1, 2, 3]
+                    }
+                }
+            ],
+            "language": {
+                "zeroRecords": "No se encontraron acreditados especificados",
+                "lengthMenu": "Mostrar _MENU_ Asistentes",
+                "emptyTable": "No hay asistentes inscritos",
+                "infoEmpty": "0 to 0 of 0 Acreditados",
+                "info": " _START_ de _END_ Asistentes _TOTAL_ ",
+                "infoFiltered": "(Filtrado de _MAX_ Asistentes)",
+                "search": "Buscar:",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Ultimo",
+                    "next": "Sig",
+                    "previous": "Prev"
+                }
+            },
+
+        });
+
+        //Config tabla de ausentes
+        $('.table-ausentes').DataTable({
+            "scrollY": "600px",
+            "scrollCollapse": true,
+            "lengthChange": false,
+            responsive: true,
+            paging: true,
+            dom: 'l<".flex-datetable"f>rtip',
+            buttons: [
+                {
+                    extend: 'excel',
+                    text: 'Generar Excel',
+                    title: 'Ausentes Encuentro Anual CITT 2019'
+                }
+            ],
+            "language": {
+                "zeroRecords": "No se encontraron ausentes especificados",
+                "lengthMenu": "Mostrar _MENU_ Ausentes",
+                "emptyTable": "No se encuentran ausentes",
+                "infoEmpty": "0 to 0 of 0 Ausentes",
+                "info": " _START_ de _END_ Ausentes _TOTAL_ ",
+                "infoFiltered": "(Filtrado de _MAX_ Ausentes)",
+                "search": "Buscar:",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Ultimo",
+                    "next": "Sig",
+                    "previous": "Prev"
+                }
+            },
+
+        });
+    });
+
+
+    var clipboard = new ClipboardJS('.btn-clipboard');
+
+    clipboard.on('success', function (e) {
+
+        $('.btn-clipboard').attr('title', 'Copiado');
+        $('.btn-clipboard').attr('data-original-title', 'Copiado');
+
+        $('.btn-clipboard').tooltip('hide')
+        $('.btn-clipboard').tooltip('show')
+
+        e.clearSelection();
+
+        setTimeout(function () {
+            $('.btn-clipboard').attr('title', 'Click para copiar');
+            $('.btn-clipboard').attr('data-original-title', 'Click para copiar');
+        }, 3000);
+
+    });
+
+
+    var clipboardDos = new ClipboardJS('.btn-clipboardDos');
+
+    clipboardDos.on('success', function (e) {
+
+        $('.btn-clipboardDos').attr('title', 'Copiado');
+        $('.btn-clipboardDos').attr('data-original-title', 'Copiado');
+
+        $('.btn-clipboardDos').tooltip('hide')
+        $('.btn-clipboardDos').tooltip('show')
+
+        e.clearSelection();
+
+        setTimeout(function () {
+            $('.btn-clipboardDos').attr('title', 'Click para copiar');
+            $('.btn-clipboardDos').attr('data-original-title', 'Click para copiar');
+        }, 3000);
+
+    });
+
+
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+
+</script>
+
+<script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+
+<script>
+
+
+    var database_upload;
+    let values = ["identificador", "nombre", "apellido", "email", "telefono", "grupo", "otro_grupo", "validador", "evento"]
+    let verify = true
+    let countAsis = 0;
+    let countLive = 0;
+    let countError = 0;
+
+    const $formExcel = document.querySelector('#formExcel')
+    const $fileExcel = document.querySelector("#excel")
+    const $verifyAlert = document.querySelector("#verifyAlert")
+    const $uploadingAlert = document.querySelector('#uploadingAlert')
+    const $readyAlert = document.querySelector('#readyAlert')
+    const $errorAlert = document.querySelector('#errorAlert')
+    const $btnExcel = document.querySelector('#btnExcel')
+
+    // Cookie
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    var csrftoken = getCookie('csrftoken');
+
+
+    function handleFile(e) {
+        if ($fileExcel.files.length == 0) {
+            $verifyAlert.style.display = "none";
+        } else {
+            $verifyAlert.style.display = "block";
+        }
+
+        $btnExcel.disabled = true
+
+
+        var files = e.target.files, f = files[0];
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            var data = new Uint8Array(e.target.result);
+            var workbook = XLSX.read(data, {type: 'array'});
+            console.log(workbook)
+            /* DO SOMETHING WITH workbook HERE */
+
+            let first_sheet_name = workbook.SheetNames[0];
+            let worksheet = workbook.Sheets[first_sheet_name];
+
+            //Convierto a Json
+            let parcial_database_upload = XLSX.utils.sheet_to_json(worksheet, {header: 1})
+            console.log(parcial_database_upload)
+
+
+            for (let index = 0; index < values.length; index++) {
+                let element = values[index];
+                verify = true;
+
+                if (parcial_database_upload[0].indexOf(element) == -1) {
+                    verify = false;
+                    $verifyAlert.style.display = "none";
+                    break;
+                } else {
+                    console.log("Todo bien " + index)
+                    $verifyAlert.style.display = "none";
+                    $btnExcel.disabled = false
+                    // Aqui asigno la BBDD
+                    database_upload = parcial_database_upload
+                    countAsis = database_upload.length
+                }
+            }
+
+            console.log("Verificacion de encabezados: " + verify)
+        };
+        reader.readAsArrayBuffer(f);
+    }
+
+    $fileExcel.addEventListener('change', handleFile, false);
+
+
+    $formExcel.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        $uploadingAlert.style.display = 'block'
+
+        if (database_upload.length < 1) {
+            alert("Excel Vacio");
+        } else {
+            //Axios - Posts
+            if (verify) {
+                countError = 0
+                countLive = 0
+                for (let index = 1; index < database_upload.length; index++) {
+                    let valor = database_upload[index];
+
+                    console.log(valor)
+
+                    await inscripcion(valor)
+                        .then(function (response) {
+                            $uploadingAlert.style.display = 'none'
+                            $readyAlert.style.display = 'block'
+
+                        }).catch(function (error) {
+                            $errorAlert.style.display = 'block'
+                        });
+                }
+                alert("Se han incrito " + countLive + " de " + countAsis);
+                location.reload();
+            } else {
+                console.log("El archivo no cumple con la verificacion.")
+            }
+        }
+
+
+    });
+
+
+    async function inscripcion(asis) {
+        await axios({
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            url: 'http://131.221.32.116/api/Asistentes/',
+
+            data: {
+                "identificador": asis[0],
+                "nombre": asis[1],
+                "apellido": asis[2],
+                "email": asis[3],
+                "telefono": asis[4],
+                "grupo": asis[5],
+                "otro_grupo": asis[6],
+                "validador": asis[7],
+                "evento": asis[8]
+            }
+        }).then(function (response) {
+            console.log(response.data);
+            console.log(response.status);
+            console.log(response.statusText);
+            console.log(response.headers);
+            console.log(response.config);
+            countLive += 1
+        }).catch(function (error) {
+            countError += 1
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+            } else if (error.request) {
+                // The request was made but no response was received
+                // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                // http.ClientRequest in node.js
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+            }
+            console.log(error.config);
+        });
+    }
+
+
+</script>
+
+
+{% endblock %}

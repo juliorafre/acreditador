@@ -1,0 +1,371 @@
+{% extends 'base/baseAcreditador.html' %}
+{% load static %}
+{% block title %} Evento | Acreditador {% endblock %}
+
+{% block moreCSS %}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css"
+          integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css"
+          href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.18/b-1.5.4/b-colvis-1.5.4/b-flash-1.5.4/b-html5-1.5.4/b-print-1.5.4/datatables.min.css"/>
+    <link rel="stylesheet" href="{% static 'evento/css/evento-detail.css' %}">
+{% endblock %}
+
+
+{% block header_special %}
+    <a class="navbar-brand ml-2" href="#">
+        <img src="{% static 'evento/img/Logo+txt.png' %}" alt="logo_acreditador">
+    </a>
+{% endblock %}
+
+
+{% block content %}
+
+    <!-- Modal Asignar Usuario -->
+    <div class="modal fade" id="AgregarAsistente" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Agregando asistente</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="POST" id="formularioInscripcion">
+                        {% csrf_token %}
+
+                        <div class="form-group">
+                            <label for="id_identificador"><b>RUN <span
+                                    style="color: red">*</span></b></label>
+                            {{ form_asistente.identificador }}
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="id_nombre"><b>{{ form_asistente.nombre.label }} <span
+                                        style="color: red">*</span></b></label>
+                                {{ form_asistente.nombre }}
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="id_apellido"><b>{{ form_asistente.apellido.label }} <span
+                                        style="color: red">*</span></b></label>
+                                {{ form_asistente.apellido }}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_email"><b>{{ form_asistente.email.label }}</b></label>
+                            {{ form_asistente.email }}
+                        </div>
+                        <div class="form-group">
+                            <label for="id_telefono"><b>{{ form_asistente.telefono.label }}</b></label>
+                            {{ form_asistente.telefono }}
+                        </div>
+                        <div class="form-group">
+                            <label for="id_grupo"><b>{{ form_asistente.grupo.label }}</b></label>
+                            {{ form_asistente.grupo }}
+                        </div>
+                        <div class="form-group" id="form_otro_grupo">
+                            <label for="id_otro_grupo"><b>{{ form_asistente.otro_grupo.label }} <span style="color: red">*</span>
+                            </b></label>
+                            {{ form_asistente.otro_grupo }}
+                        </div>
+                        <div class="form-group">
+                            <label for="id_validador"><b>Acreditar?</b></label>
+                            {{ form_asistente.validador }}
+                        </div>
+                        <button type="submit" name="agregar_asistente" class="btn btn-acreditador ml-2 w-25">Agregar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal QR Lector -->
+    <div class="modal fade bd-example-modal-lg" id="QrLector" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+
+                    <div class="form-group">
+                        <select class="form-control" id="exampleFormControlSelect1">
+                        </select>
+                    </div>
+
+
+                    <button type="button" id="btn_qr_close" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <video width="100%" id="preview" class="video"></video>
+                    <p id="p1"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="main mb-5">
+        <div class="contenedor">
+            <div class="header_content">
+                <div class="info-titulo">
+                    <p class="titulo_conte">{{ evento.titulo|truncatechars:30|title }}</p>
+                    <p class="titulo_descripcion">{{ evento.descripcion }}</p>
+                </div>
+
+                <div class="btns-header">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AgregarAsistente">
+                        Agregar asistente
+                    </button>
+                </div>
+                <div class="info-evento">
+                    <div class="info info-fecha">
+                        <img src="{% static 'evento/img/Evento_detail/calendar.svg' %}" width="16px"
+                             alt="Fecha del evento">
+                        <p>{{ evento.fecha }}</p>
+                    </div>
+                    <div class="info info-lugar">
+                        <img src="{% static 'evento/img/Evento_detail/place.svg' %}" width="16px"
+                             alt="puntoMapa">
+                        <p>{% if evento.lugar %}
+                        {{ evento.lugar }}
+                        {% else %}
+                            Sin lugar
+                        {% endif %}
+
+                        {% if evento.direccion %}
+                        {{ evento.direccion}}
+                        {% else %}
+                            Sin Direccion
+                        {% endif %}</p>
+                    </div>
+                    <div class="info info-tiempo">
+                        <img src="{% static 'evento/img/Evento_detail/time.svg' %}" width="16px"
+                             alt="Hora de Inicio y fin">
+                        <p>
+                            Inicio: {% if evento.hora_inicio %}{{ evento.hora_inicio }}{% else %} N/E{% endif %} - Fin:
+                            {% if evento.hora_fin %}{{ evento.hora_fin }}{% else %} N/E{% endif %}
+                        </p>
+                    </div>
+
+                    <hr class="line-header" size="30">
+                </div>
+            </div>
+        </div>
+
+        <div class="contenedor2 card_content">
+            <div class="card">
+                <img src="{% static 'evento/img/Evento_detail/data/peopleData.svg' %}" alt="Personas en el evento">
+                <div class="data-card-info">
+                    <p class="title-data">
+                        Número de inscritos
+                    </p>
+                    <p class="data-value">
+                        {{ evento.Asistentes.count }}
+                    </p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="{% static 'evento/img/Evento_detail/data/ConfirmedData.svg' %}" alt="Personas en el evento">
+                <div class="data-card-info">
+                    <p class="title-data">
+                        Número de acreditados
+                    </p>
+                    <p class="data-value">
+                        {{ acreditados.count }}
+                    </p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="{% static 'evento/img/Evento_detail/data/LateData.svg' %}" alt="Personas en el evento">
+                <div class="data-card-info">
+                    <p class="title-data">
+                        Número de ausentes
+                    </p>
+                    <p class="data-value">
+                        {{ ausentes.count }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="contenedor2 tablas mt-3">
+
+            <div class="table-content-total tablet-content-asistentes">
+
+                {% include 'base/messages.html' %}
+
+                <div class="header-table-content ">
+                    <p class="title-table">Total de Asistentes</p>
+                    <button type="button" class="btn btn-primary" id="btn_qr" data-toggle="modal"
+                            data-target="#QrLector">
+                        QR Lector
+                    </button>
+                </div>
+
+
+                <table class="table table-total table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">Nro</th>
+                        <th scope="col">RUN</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Telefono</th>
+                        <th scope="col">Grupo</th>
+                        <th scope="col">Acreditacion</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% if asistentes %}
+                        {% for asis in asistentes %}
+                            <tr>
+                                <th scope="row">{{ forloop.counter }}</th>
+                                <td>{{ asis.identificador }}</td>
+                                <td>{{ asis.nombre }} {{ asis.apellido }}</td>
+                                <td>{% if asis.email %} {{ asis.email }} {% else %} - {% endif %}</td>
+                                <td>{% if asis.telefono %} {{ asis.telefono }} {% else %} - {% endif %}</td>
+                                <td>{% if asis.grupo %}
+                                    {{ asis.grupo }}
+                                    {% if asis.grupo == "Otros" %}
+                                        {% if asis.otro_grupo %}
+                                            {{ asis.otro_grupo }}
+                                        {% else %}
+                                             -
+                                        {% endif %}
+                                    {% endif %}
+                                {% else %}
+                                    -
+                                {% endif %}</td>
+                                <td>
+                                    {% if asis.validador %}
+                                        <span class="badge badge-pill badge-success">Acreditado</span>
+                                    {% else %}
+                                        <a href="{% url 'acreditar-asistentes-acreditadores' asis.evento.id asis.id %}"
+                                           class="btn btn-block btn-sm btn-primary">Acreditar</a>
+
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+
+
+{% endblock %}
+
+
+{% block moreJS %}
+
+    <!--**********  DATATABLE  **********-->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+
+    <script type="text/javascript"
+            src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.18/af-2.3.2/b-1.5.4/b-colvis-1.5.4/b-flash-1.5.4/b-html5-1.5.4/b-print-1.5.4/kt-2.5.0/datatables.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+    <!--**********  /DATATABLE  **********-->
+
+    <script type="text/javascript" src="{% static 'evento/js/QRlector/instascan.min.js' %}"></script>
+    <script src="{% static 'evento/js/QRlector/instacanConf.js' %}"></script>
+    <script type="text/javascript" src="{% static 'evento/js/verificadorRUN.js' %}"></script>
+
+
+
+    <script>
+
+        $(document).ready(function () {
+
+            $("#formularioInscripcion  select[name=grupo]").change(function () {
+                valor = $(this).val();
+                console.log(valor);
+                if ($(this).val() == "Otros") {
+                    $("#form_otro_grupo").show();
+                }
+                else {
+                    $("#form_otro_grupo").hide();
+                }
+            });
+
+            $("#form_otro_grupo").hide();
+
+            //Config tabla de inscritos totales
+            $('.table-total').DataTable({
+                "scrollY": "600px",
+                "scrollCollapse": true,
+                "lengthChange": false,
+                responsive: true,
+                paging: true,
+                dom: '<".flex-datetable"f>rtip',
+                "language": {
+                    "zeroRecords": "No se encontraron inscritos especificados",
+                    "lengthMenu": "Mostrar _MENU_ Inscritos",
+                    "emptyTable": "No se encuentran Asistentes",
+                    "infoEmpty": "0 to 0 of 0 Inscritos",
+                    "info": " _START_ de _END_ Inscritos _TOTAL_ ",
+                    "infoFiltered": "(Filtrado de _MAX_ Inscritos)",
+                    "search": "Buscar:",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Ultimo",
+                        "next": "Sig",
+                        "previous": "Prev"
+                    }
+                }
+            });
+
+
+
+            $("#DataTables_Table_0_filter  label  input").attr("pattern", "[0-9a-zA-ZñÑáéíóúÁÉÍÓÚ ]{1,255}");
+            $("#DataTables_Table_0_filter  label  input").focus();
+
+
+            $("#DataTables_Table_0_filter  label  input").keyup(function () {
+                let str = $("#DataTables_Table_0_filter  label  input").val();
+                console.log(str);
+                let pattern = /(\d{7,8}\W{1}[0-9kK]{1})/i;
+                let result = pattern.exec(str);
+
+                if (result != null) {
+                    let str1 = result[0];
+                    str1 = str1.replace('¡', '-');
+                    str1 = str1.replace('¿', '-');
+                    str1 = str1.replace('\'', '-');
+                    str1 = str1.replace('’', '-');
+                    str1 = str1.replace('´', '-');
+                    str1 = str1.replace('/', '-');
+                    str1 = str1.replace("\\", '-');
+
+                    if (Rut(str1.trim())) {
+                        $("#DataTables_Table_0_filter > label > input").val(str1.trim());
+                        str2 = $("#DataTables_Table_0_filter  label  input").val();
+                        $("#DataTables_Table_0_filter > label > input").val(str2 + " ");
+                        $("#DataTables_Table_0_filter > label > input").trigger( "change" );
+                    } else {
+                        $("#DataTables_Table_0_filter > label > input").val('Rut Invalido');
+                    }
+                }
+            });
+
+
+        });
+    </script>
+
+
+
+{% endblock %}

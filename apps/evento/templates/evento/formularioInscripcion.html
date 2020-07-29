@@ -1,0 +1,220 @@
+<!DOCTYPE html>{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
+    <script defer src="https://use.fontawesome.com/releases/v5.6.3/js/all.js"
+            integrity="sha384-EIHISlAOj4zgYieurP0SdoiBYfGJKkgWedPHH4jCzpCXLmzVsw1ouK59MuUtP4a1"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'evento/css/FormCss/formCss.css' %}">
+    <title>{{ evento.titulo }} </title>
+</head>
+<body>
+
+<!--**********  HEADER  **********-->
+<header id="header">
+    <nav class="navbar">
+        <div class="container header-order navbar-nav">
+            <a class="navbar-brand ml-2 btn " href="#">
+                <img src="{% static 'evento/img/FormAssets/LogoDuoc.svg' %}" alt="Logo duocUC">
+            </a>
+
+
+            {% comment %} <div class="d-flex flex-row justify-content-end align-items-center" id="NavBarFormu">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item mb-1">
+                        <a class="nav-link" style="color:#000; font-size: 24px;" href="#"><i
+                                class="fab fa-facebook"></i></a>
+                    </li>
+                    <li class="nav-item mb-1">
+                        <a class="nav-link" style="color:#000; font-size: 24px;" href="#"><i
+                                class="fab fa-instagram"></i></a>
+                    </li>
+                    <li class="nav-item mb-1">
+                        <a class="nav-link" style="color:#000; font-size: 24px;" href="#"><i class="fab fa-twitter"></i></a>
+                    </li>
+                </ul>
+            </div> {% endcomment %}
+
+        </div>
+
+    </nav>
+</header>
+<!--**********  /HEADER  **********-->
+
+<!--**********  CONTENIDO  **********-->
+
+<div class="container main">
+
+    <div class="formularioActualizar">
+        <div class="infoFormulario">
+            <p class="titleForm">{{ evento.titulo }}</p>
+            <p class="descripcionForm">
+                {{ evento.descripcion }}
+            </p>
+
+            <div class="microInfo">
+                <div class="micro info-fecha">
+                    <img src="{% static 'evento/img/FormAssets/calendar.svg' %}" width="16px" alt="Codigo de evento">
+                    <p>{{ evento.fecha }}</p>
+                </div>
+                <div class="micro info-lugar">
+                    <img src="{% static 'evento/img/FormAssets/place.svg' %}" width="16px" alt="Codigo de evento">
+                    <p>{% if evento.lugar %}
+                        {{ evento.lugar }}
+                        {% endif %}
+
+                        {% if evento.direccion %}
+                        {{ evento.direccion}}
+                        {% else %}
+                            Sin Direccion
+                        {% endif %}
+
+                        </p>
+                </div>
+                <div class="micro info-tiempo">
+                        <img src="{% static 'evento/img/Evento_detail/time.svg' %}" width="16px"
+                             alt="Hora de Inicio y fin">
+                        <p>
+                            Inicio: {% if evento.hora_inicio %}{{ evento.hora_inicio }}{% else %} N/E{% endif %} - Fin:
+                            {% if evento.hora_fin %}{{ evento.hora_fin }}{% else %} N/E{% endif %}
+                        </p>
+                    </div>
+            </div>
+            <hr class="line-header" size="30">
+            <small id="emailHelp" class="form-text text-muted mt-2" style="color: red !important;" >* Campo obligatorio.</small>
+        </div>
+
+        {% include 'base/messages.html' %}
+
+        <section class="formulario" id="formularioInscripcion">
+        
+            <form action="" method="POST">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="id_identificador"><b>RUN  <span style="color: red; font-weight: normal !important;">*</span></b></label>
+                    {{ form_asistente.identificador }}
+                    <small id="emailHelp" class="form-text text-muted">Ingresar RUN en formato XXXXXXXX-X</small>
+                    <small id="passwordHelpBlock" class="form-text text-muted">
+  <span style="color: red">Rut invalido.</span>
+</small>
+                </div>
+
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="id_nombre"><b>{{ form_asistente.nombre.label }} <span style="color: red; font-weight: normal !important;">*</span></b></label>
+                        {{ form_asistente.nombre }}
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="id_apellido"><b>{{ form_asistente.apellido.label }} <span
+                                style="color: red">*</span></b></label>
+                        {{ form_asistente.apellido }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_email"><b>{{ form_asistente.email.label }}<span style="color: red; font-weight: normal !important;">*</span></b></label>
+                    {{ form_asistente.email }}
+                </div>
+                <div class="form-group">
+                    <label for="id_telefono"><b> Número de teléfono <span style="color: red; font-weight: normal !important;">*</span> </b></label>
+                    {{ form_asistente.telefono }}
+                </div>
+                <div class="form-group">
+                    <label for="id_grupo"><b>{{ form_asistente.grupo.label }} <span style="color: red; font-weight: normal !important;">*</span>
+                    </b></label>
+                    {{ form_asistente.grupo }}
+                </div>
+                <div class="form-group" id="form_otro_grupo">
+                    <label for="id_otro_grupo"><b>{{ form_asistente.otro_grupo.label }} <span style="color: red; font-weight: normal !important;">*</span>
+                    </b></label>
+                    {{ form_asistente.otro_grupo }}
+                </div>
+                <div class="form-group">
+                    <button type="submit" name="inscribir_asistente" class="btn btn-block ml-auto"
+                        style="background-color: #000; color: #fff">Inscribir
+                </button>
+                </div>
+
+            </form>
+        </section>
+    </div>
+</div>
+<!--**********  /CONTENIDO  **********-->
+
+<!--**********  BOOTSTRAP JS  **********-->
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+<!--**********  /BOOTSTRAP JS  **********-->
+<script type="text/javascript" src="{% static 'evento/js/verificadorRUN.js' %}"></script>
+
+<script>
+
+        $('.alert').alert()
+
+        $("#formularioInscripcion  select[name=grupo]").change(function () {
+            valor = $(this).val();
+            //console.log(valor);
+            if ($(this).val() == "Otros") {
+                $("#form_otro_grupo").show();
+            }
+            else {
+                $("#form_otro_grupo").hide();
+            }
+        });
+
+        $("#form_otro_grupo").hide();
+        $("#passwordHelpBlock").hide();
+
+
+
+
+        $("#formularioInscripcion  input[name=identificador]").on("change paste keyup", function () {
+                let str = $("#formularioInscripcion  input[name=identificador]").val();
+                str2 = $("#formularioInscripcion  input[name=identificador]").val();
+                //console.log(str);
+                let pattern = /(\d{7,8}\W{1}[0-9kK]{1})/i;
+                let result = pattern.exec(str);
+
+                if (result != null) {
+                    let str1 = result[0];
+                    str1 = str1.replace('¡', '-');
+                    str1 = str1.replace('¿', '-');
+                    str1 = str1.replace('\'', '-');
+                    str1 = str1.replace('’', '-');
+                    str1 = str1.replace('´', '-');
+                    str1 = str1.replace('/', '-');
+                    str1 = str1.replace('\.', '-');
+                    str1 = str1.replace("\\", '-');
+                    if (Rut(str1.trim())) {
+                        $("#formularioInscripcion  input[name=identificador]").addClass("is-valid");
+                        $("#formularioInscripcion  input[name=identificador]").removeClass("is-invalid");
+                        $("#passwordHelpBlock").hide();
+                        $("#formularioInscripcion  input[name=identificador]").val(str1.trim());
+                    } else{
+                        //$("#formularioInscripcion  input[name=identificador]").val('Rut Invalido');
+                        $("#passwordHelpBlock").show();
+                        $("#formularioInscripcion  input[name=identificador]").addClass("is-invalid");
+                        $("#formularioInscripcion  input[name=identificador]").removeClass("is-valid");
+                    }
+                }
+            });
+
+</script>
+
+</body>
+</html>

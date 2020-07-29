@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+
+{% load static %}
+
+
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script defer src="https://use.fontawesome.com/releases/v5.6.3/js/all.js"
+        integrity="sha384-EIHISlAOj4zgYieurP0SdoiBYfGJKkgWedPHH4jCzpCXLmzVsw1ouK59MuUtP4a1"
+        crossorigin="anonymous"></script>
+     <link rel="stylesheet" href="{% static 'evento/css/FormCss/Form_Confirmation_new.css' %}">
+    <title>Evento no disponible</title>
+</head>
+
+<body>
+
+    <!--**********  HEADER  **********-->
+    <header id="header">
+        <nav class="navbar">
+            <div class="container header-order navbar-nav">
+                <a class="navbar-brand ml-2 btn " href="#">
+                    <img src="{% static 'evento/img/FormAssets/LogoDuoc.svg' %}" alt="Logo duocUC">
+                </a>
+
+
+                <!--  <div class="d-flex flex-row justify-content-end align-items-center" id="NavBarFormu">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item mb-1">
+                            <a class="nav-link" style="color:#000; font-size: 24px;" href="#"><i
+                                    class="fab fa-facebook"></i></a>
+                        </li>
+                        <li class="nav-item mb-1">
+                            <a class="nav-link" style="color:#000; font-size: 24px;" href="#"><i
+                                    class="fab fa-instagram"></i></a>
+                        </li>
+                        <li class="nav-item mb-1">
+                            <a class="nav-link" style="color:#000; font-size: 24px;" href="#"><i
+                                    class="fab fa-twitter"></i></a>
+                        </li>
+                    </ul>
+                </div> -->
+            </div>
+        </nav>
+    </header>
+    <!--**********  /HEADER  **********-->
+
+    <!--**********  CONTENIDO  **********-->
+
+    <div class="container main">
+        <p class="titleForm">Las inscripciones a este evento <br> no se encuentran disponibles.</p>
+        <div class="formularioActualizar">
+
+            <div class="formularioEvento">
+                <h4>{{ evento.titulo }}</h4>
+                <p>{{ evento.descripcion }}
+                </p>
+                <div class="lugarYHora">
+                    <p><i class="fas fa-map-marker-alt"></i>
+                        {% if evento.lugar %}
+                        {{ evento.lugar }}
+                        {% endif %}
+
+                        {% if evento.direccion %}
+                        {{ evento.direccion}}
+                        {% else %}
+                            Sin Direccion
+                        {% endif %}
+
+                        </p>
+                    <p><i class="far fa-calendar-alt"></i> {{ evento.fecha }} </p>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="botones">
+            <div class="DuocUC">
+                <a href="http://www.duoc.cl/inicio">Ir a DuocUC</a>
+            </div>
+        </div>
+    </div>
+
+
+    <!--**********  /CONTENIDO  **********-->
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+    <!--**********  /BOOTSTRAP JS  **********-->
+
+    <script>
+        $('.alert').alert();
+
+    </script>
+
+
+</body>
+
+</html>

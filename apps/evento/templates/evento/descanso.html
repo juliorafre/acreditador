@@ -1,0 +1,27 @@
+{% extends 'base/baseAcreditador.html' %}
+{% load static %}
+{% block title %} Evento Finalizado {% endblock %}
+
+{% block moreCSS %}
+    <link rel="stylesheet" href="{% static 'evento/css/descanso.css' %}">
+{% endblock %}
+
+
+
+{% block header_special %}
+    <a class="navbar-brand ml-2" href="#">
+        <img src="{% static 'evento/img/Logo+txt.png' %}" alt="logo_acreditador">
+    </a>
+{% endblock %}
+
+{% block content %}
+    <div class="container main flexImage">
+        <div class="elementosDescanso">
+            <img src="{% static 'evento/img/descanso/hugo-waiting.png' %}" class="img-fluid" alt="Responsive image">
+            <h1 class="titleDescanso">Este evento ya finalizó puedes tomarte un descanso, gracias por tus
+                servicios.</h1>
+        </div>
+    </div>
+{% endblock %}
+
+

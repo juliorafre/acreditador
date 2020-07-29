@@ -1,0 +1,302 @@
+<!-- modificado 13-01-2020  dar más funcionalidad al superusuario-->
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %} Acreditador | DuocUC {% endblock %}
+
+{% block moreCSS %}
+<link rel="stylesheet" href="{% static 'evento/css/estilos-index.css' %}">
+{% endblock %}
+
+{% block header_special %}
+<a class="navbar-brand ml-2" href="#">
+    <img src="{% static 'evento/img/Logo+txt.png' %}" alt="Logo_acreditador">
+</a>
+{% endblock %}
+
+
+{% block content %}
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Crear Evento</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <small id="emailHelp" class="form-text text-muted mt-2 mb-2">Todos los datos son obligatorios <span
+                            style="color: red">*</span> </small>
+                    <div class="form-group">
+                        <label for="id_titulo"><b>{{ form_evento.titulo.label }}</b></label>
+                        {{ form_evento.titulo }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_descripcion"><b>{{ form_evento.descripcion.label }} </b></label>
+                        {{ form_evento.descripcion }}
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="id_lugar"><b>{{ form_evento.lugar.label }} </b></label>
+                            {{ form_evento.lugar }}
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="id_direccion"><b>{{ form_evento.direccion.label }} </b></label>
+                            {{ form_evento.direccion }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_sede"><b>{{ form_evento.sede.label }} </b></label>
+                        {{ form_evento.sede }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_escuela"><b>{{ form_evento.escuela.label }} </b></label>
+                        {{ form_evento.escuela }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_area"><b>{{ form_evento.area.label }} </b></label>
+                        {{ form_evento.area }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_fecha"><b>{{ form_evento.fecha.label }} </b></label>
+                        <input type="date" class="form-control" id="id_fecha" name="fecha" required="true"
+                               value="{{ placement.date|date:" d-m-Y" }}">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="id_hora_inicio"><b>Hora de inicio </b></label>
+                            <input type="time" class="form-control" id="id_hora_inicio" name="hora_inicio"
+                                   required="true"
+                                   value="{{ form.hora_inicio.value }}">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="id_hora_fin"><b>Hora de fin </b></label>
+                            <input type="time" class="form-control" id="id_hora_fin" name="hora_fin"
+                                   required="true"
+                                   value="{{ form.hora_fin.value }}">
+                        </div>
+                    </div>
+
+                    <p style="color:dimgrey; font-size: 14px; margin-bottom: 10px"> Otras opciones </p>
+
+                    <div class="form-group">
+
+                        <div class="custom-control custom-checkbox mb-2">
+                            <input type="checkbox" name="ver_limit" class="custom-control-input" id="customCheck1"
+                                   {% if form_evento_config.ver_limit.value == True %}
+                                   checked
+                                   {% endif %}>
+                            <label class="custom-control-label" for="customCheck1"  >Limite de asistentes</label>
+                        </div>
+
+
+                        <input class="form-control" value="{{ form_evento_config.num_limit.value }}" type="number"
+                               name="num_limit" id="id_check" disabled
+
+                        >
+                        <!--<small class="form-text text-muted mt-2 mb-2">Valor por defecto 0</small>-->
+                    </div>
+
+
+                    <!--<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>-->
+                    <button type="submit" name="crear_evento" class="btn btn-acreditador ml-2 w-25">Crear</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="main mb-5">
+
+    {% if request.user.is_superuser %}
+    <div class="container mb-5 cards-container">
+        <h2 class="mb-3 mb-4" style="font-weight: 700">Informacion relevante</h2>
+        <div class="card-deck cards-container">
+            <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                <div class="card-header">Total de Eventos generados</div>
+                <div class="card-body">
+                    <h5 class="card-title" style="font-size: 50px;">{{ evento.count }}</h5>
+                </div>
+            </div>
+            <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                <div class="card-header">Total de asistentes acreditados</div>
+                <div class="card-body">
+                    <h5 class="card-title" style="font-size: 50px;">{{ acredi.count }}</h5>
+                </div>
+            </div>
+            <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                <a href="{% url 'gestion-usuario' %}" style="color:#fff">
+                <div class="card-header">Total de usuarios registrados.</div>
+                <div class="card-body">
+                    <h5 class="card-title" style="font-size: 50px;">{{ usu.count }}</h5>
+                </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container tablas mt-3" style="background-color: #fff; padding: 20px 20px;border-radius: 8px;">
+
+        <div class="table-content-total tablet-content-asistentes tableAsis" id="tableAsis">
+
+            <div class="header-table-content ">
+                <p class="title-table " style="font-size: 22px; font-weight: 700;">Ultimos eventos agregados</p>
+            </div>
+
+            <div>
+                <table id="table-total" class="table table-total table-hover table-striped  onlyTable"
+                       style="min-height: 200px;">
+                    <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Titulo</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Lugar</th>
+                        <th scope="col">Asistentes</th>
+                        <th scope="col">Codigo</th>
+                        <th scope="col">Ir</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% if evento %}
+                    {% for even in evento reversed %}
+                    <tr>
+                        <th scope="row">
+                            {{ even.id }}
+                        </th>
+                        <td>{{ even.titulo }}</td>
+                        <td>{{ even.fecha }}</td>
+                        <td>{{ even.ubicacion }}</td>
+                        <td>{{ even.Asistentes.count }}</td>
+                        <td>{{ even.codigo }}</td>
+                        <td><a href="{% url 'detalle_evento' even.id   %}">Link</a></td>
+                    </tr>
+                    {% endfor %}
+                    {% endif %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+
+    <div class="container">
+        {% include 'base/messages.html' %}
+    </div>
+
+    <div class="contenedor">
+        <div class="header_content">
+            <p class="titulo_conte">{% if eventos %} {{ eventos.count }} {% else %} 0 {% endif %} eventos</p>
+            <a href="#" class="btn_add">
+                <button type="button" class="btn_circle" data-toggle="modal" data-target="#exampleModalCenter">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </a>
+        </div>
+    </div>
+
+    <div class="contenedor2 card_content">
+
+        {% if eventos %}
+        {% for evento in eventos %}
+        <div class="cardDos  {% if evento.fecha > fecha %}card-waiting{% elif evento.fecha == fecha %}card-inProgress{% else %} card-Finished{% endif %}">
+            <div class="card_info">
+                <p class="evento_titulo">
+                    {{ evento.titulo|truncatechars:37 }}
+                </p>
+                <p class="evento_descripcion">
+                    {{ evento.descripcion|truncatechars:60 }}
+                </p>
+            </div>
+            <div class="data_card">
+
+                <div class="data_info">
+                    <p>{% if evento.hora_inicio and evento.hora_fin %}{{ evento.hora_inicio }} a
+                        {{ evento.hora_fin }}{% else %}Sin horario{% endif %}</p>
+                    <p>{{ evento.Asistentes.count }} inscritos <br> {% if evento.fecha > fecha %} Fecha:
+                        {{ evento.fecha|date:"d M Y" }} {% elif evento.fecha == fecha %}EN
+                        PROGRESO{% else %}FINALIZADO{% endif %}</p>
+                </div>
+                <a class="btn_card btn btn-sm btn-primary"
+                   href="{% url 'detalle_evento' evento.id %}">Ver</a>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <h1 class="mt-5">No se encuentran enventos registrados</h1>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}
+
+
+{% block moreJS %}
+
+
+<script>
+
+    let limite = document.querySelector("#id_check");
+    let checkBtn = document.querySelector("#customCheck1");
+    //limite.setAttribute("disabled", "");
+    //console.log(checkBtn.checked);
+
+    limite.defaultValue = '0';
+
+
+    checkBtn.addEventListener("change", () => {
+        if (limite.hasAttribute("disabled")) {
+            limite.removeAttribute("disabled");
+        } else {
+            limite.setAttribute("disabled", "");
+        }
+    })
+
+    //Config tabla de acreditados
+    $('.table-total').DataTable({
+        "scrollY": "600px",
+        "scrollCollapse": true,
+        "lengthChange": false,
+        responsive: true,
+        paging: true,
+        dom: '<"controls-datatable" l<".flex-datetable"f>rtip>',
+        buttons: [
+            {
+                extend: 'excel',
+                text: 'Generar Excel',
+                title: 'Asistentes Encuentro Anual CITT 2019'
+            }
+        ],
+        "language": {
+            "zeroRecords": "No se encontraron acreditados especificados",
+            "lengthMenu": "Mostrar _MENU_ Asistentes",
+            "emptyTable": "No hay asistentes inscritos",
+            "infoEmpty": "0 to 0 of 0 Acreditados",
+            "info": " _START_ de _END_ Asistentes _TOTAL_ ",
+            "infoFiltered": "(Filtrado de _MAX_ Asistentes)",
+            "search": "Buscar:",
+            "paginate": {
+                "first": "Primero",
+                "last": "Ultimo",
+                "next": "Sig",
+                "previous": "Prev"
+            }
+        },
+
+    });
+
+</script>
+{% endblock %}

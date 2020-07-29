@@ -1,0 +1,34 @@
+.main{
+  width: 100%;
+  height: 100vh;
+  padding: 20px;
+}
+
+.main, .elementosDescanso {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.main img{
+  margin-top: 50px;
+  width: 50%;
+}
+
+.main .titleDescanso{
+  margin-top: 20px;
+  max-width: 1200px;
+  color: #C2C3CA;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+    .main .titleDescanso{
+      font-size: 1.2em;
+  max-width: 1200px;
+  color: #C2C3CA;
+  text-align: center;
+}
+
+}

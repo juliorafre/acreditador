@@ -1,0 +1,108 @@
+<!doctype html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{% static 'registration/img/log_favicon_256.ico' %}">
+    <title>Iniciar Sesión</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
+
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'registration/css/login.css' %}" rel="stylesheet">
+</head>
+
+<body class="text-center">
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Ingrese codigo de evento</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {{ formAcredi.as_p }}
+                    <div class="form-group" class="d-flex flex-xs-row justify-content-between align-items-center">
+                        <button type="button" class="btn btn-danger w-49" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" name="formAcreditacionEvento" class="btn btn-primary w-49">Acceder</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<form class="form-signin" method="POST">
+    {% csrf_token %}
+    <img class="logo mb-2 animated swing" src="{% static 'registration/img/Logo.svg' %}" alt="" width="120"
+         height="120">
+    <h1 class="titulo h3 mb-3 font-weight-normal"><b>Iniciar sesión</b></h1>
+
+    {% include 'base/messages.html' %}
+
+    {% if error %}
+        <div class="alert alert-danger text-left .alert-dismissible fade show alert_animation animated shake"
+             role="alert">
+
+            <!-- {{ form.non_field_errors }} -->
+
+            {{ error }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endif %}
+
+
+    <label for="id_username" hidden>Nombre de usuario:</label>
+    <input type="text" class="form-control {% if error %} is-invalid {% endif %}" placeholder="Usuario" name="username"
+           autofocus required id="id_username">
+    <label for="inputPassword" class="sr-only" hidden>Password</label>
+    <input type="password" name="password" class="form-control {% if error %} is-invalid {% endif %}"
+           placeholder="Contraseña" required id="id_password">
+    <button class="btn btn-lg btn-block" type="submit" name="iniciarSesion">Ingresar</button>
+
+
+    <!--
+        <p class="mt-3" style="font-size: 18px;" >O</p>
+     -->
+    <hr class="hr mt-4" style="width: 200px;">
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-lg btn-block mb-3" data-toggle="modal" data-target="#exampleModalCenter">
+        Soy acreditador
+    </button>
+    <!-- <a href="#" class="btn btn-lg btn-block mb-3"> Soy acreditador </a> -->
+    <p class="mt-4 mb-2 text-muted" style="font-size: 14px;">No tienes cuenta? O tienes algún problema? <a href="mailto:julio157ramirez@gmail.com?subject=Creacion de Cuenta Acreditador&body=Me counico con el proposito de solicitar una cuenta para el acreditador. Mi datos personales son: ">Solicita
+        información</a></p>
+
+    <img class="logoDuoc" src="{% static 'evento/img/CITTLogo.jpg' %}" alt="Logo de Duoc UC">
+</form>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+
+</body>
+</html>

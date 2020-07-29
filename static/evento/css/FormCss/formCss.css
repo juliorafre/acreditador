@@ -1,0 +1,166 @@
+html, body {
+    font-family: 'Open Sans', 'Helvetica Neue', sans-serif
+}
+
+body {
+    background-color: #F3F3F3;
+    /*background-image: linear-gradient(-180deg, #f1f4ff 0%, #fff 100%);
+    /* background-image: linear-gradient(-180deg, #311CA0 0%, #0A60C4 100%); */
+    min-height: 100vh;
+}
+
+a {
+    text-decoration: none;
+    font-weight: 600;
+}
+
+
+/*------------  HEADER  ------------*/
+
+
+#header {
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1030;
+}
+
+#header .navbar {
+    background: rgba(249, 249, 249, 0.98);
+    box-shadow: 0 0 23px 0 rgba(0, 0, 0, 0.04);
+}
+
+#header .navbar-nav {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+#header .navbar-nav li {
+    margin-left: 25px;
+}
+
+/*------------  /HEADER  ------------*/
+
+/*------------  CONTENIDO  ------------*/
+
+.main {
+    padding: 60px 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.infoFormulario {
+    margin-bottom: 35px;
+}
+
+.formularioActualizar {
+    background-color: #fff;
+    width: 730px;
+    border-radius: 13px;
+    box-shadow: 0 0 23px 0 rgba(0, 0, 0, 0.04);
+    padding: 40px 50px;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.titleForm {
+    display: block;
+    width: 100%;
+    text-align: left;
+    font-size: 38px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.descripcionForm {
+    font-weight: 600;
+    color: #686868;
+    font-size: 17px;
+    margin-bottom: 30px;
+}
+
+.formularioEvento {
+    width: 100%;
+}
+
+
+.microInfo {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+
+.micro {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: flex-start;
+    margin-right: 20px;
+}
+
+.micro img {
+    margin-right: 8px;
+}
+
+.info-fecha img {
+    margin-top: 3px;
+}
+
+.line-header {
+    display: block;
+    margin-top: -0.3em;
+    margin-bottom: 0.5em;
+    margin-left: auto;
+    margin-right: auto;
+    border-style: solid;
+    border-width: 1.5px;
+    border-color: rgba(0, 0, 0, 0.096);
+}
+
+.formulario, .formulario form {
+    width: 100%;
+}
+
+.formulario form .form-group {
+    margin-bottom: 30px;
+}
+
+.formulario .form-group button[type=submit] {
+    width: 200px;
+}
+
+@media (max-width: 500px) {
+    .header-order {
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .formulario .form-group button[type=submit] {
+        width: 100%;
+    }
+
+    .titleForm {
+        font-size: 32px;
+    }
+
+    .descripcionForm {
+        font-size: 14px;
+    }
+
+    .formularioActualizar {
+    padding: 40px 20px;
+
+}
+
+}

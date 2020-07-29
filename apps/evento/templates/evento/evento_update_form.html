@@ -1,0 +1,128 @@
+<!--modificado la max de caracteres de la descripcion-->
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %} Evento | Acreditador{% endblock %}
+
+{% block moreCSS %}
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css"
+      integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+<link rel="stylesheet" type="text/css"
+      href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.18/b-1.5.4/b-colvis-1.5.4/b-flash-1.5.4/b-html5-1.5.4/b-print-1.5.4/datatables.min.css"/>
+
+<link rel="stylesheet" href="{% static 'evento/css/eventoUpdate.css' %}">
+{% endblock %}
+
+
+{% block header_special %}
+<a class="navbar-brand ml-2 btn btn-light shadow-sm" href="{% url 'detalle_evento' evento.id %}">
+    <i class="fas fa-arrow-left"></i> <span class="ml-2 " style="font-size: 16px;">Eventos</span>
+</a>
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="container main">
+
+    <div class="formularioActualizar">
+        <p class="titleForm">Actualizar Formulario</p>
+
+        <div class="formularioEvento">
+            <form action="" method="post">
+                {% csrf_token %}
+                {# {{ form|crispy }}#}
+
+                <div class="form-group">
+                    <label for="id_titulo"><b>Título </b></label>
+                    <input type="text" name="titulo" class="form-control" required placeholder="Titulo"
+                           maxlength="200" id="id_titulo" value="{{ form.titulo.value }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="id_descripcion"><b>{{form.descripcion.label}}</b></label>
+
+                    <textarea name="descripcion" class="form-control"
+                              placeholder="Breve descripcion del proposito del evento." maxlength="1000"
+                              id="id_descripcion" >{{form.descripcion.value}}</textarea>
+
+                </div>
+
+               
+                <div class="form-group">
+                    <div class="form-row">
+                        <div class="col">
+                            <label for="id_lugar"><b>{{form.lugar.label}}</b></label>
+                            <input type="text" name="lugar" class="form-control" maxlength="200" id="id_lugar"
+                                value="{{ form.lugar.value }}">
+                        </div>
+
+                        <div class="col">
+                            <label for="id_direccion"><b>{{form.direccion.label}}</b></label>
+                            <input type="text" name="direccion" class="form-control" maxlength="200" id="id_direccion"
+                                value="{{form.direccion.value}}">
+                        </div>
+                    </div>
+                </div>
+
+                 <div class="form-group">
+                     <label for="id_sede"><b>{{ form.sede.label }} </b></label>
+                     {{ form.sede }}
+                 </div>
+
+
+
+                <div class="form-group">
+                    <label for="id_escuela"><b>{{ form.escuela.label }} </b></label>
+                    {{ form.escuela }}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_area"><b>{{ form.area.label }} </b></label>
+                    {{ form.area }}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_fecha"><b>Fecha del evento</b></label>
+                    <input type="date" class="form-control" id="id_fecha" name="fecha" required="true"
+                           value="{{ form.fecha.value|date:'Y-m-d' }}">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="id_hora_inicio"><b>Hora de inicio <span style="color: red">*</span></b></label>
+                        <input type="time" class="form-control" id="id_hora_inicio" name="hora_inicio"
+                               required="true"
+                               value="{{ form.hora_inicio.value }}">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="id_hora_fin"><b>Hora de fin <span style="color: red">*</span></b></label>
+                        <input type="time" class="form-control" id="id_hora_fin" name="hora_fin"
+                               required="true"
+                               value="{{ form.hora_fin.value }}">
+                    </div>
+                </div>
+
+                <a href="{% url 'detalle_evento' evento.id %}" class="btn btn-danger ml-2 w-25">Cancelar</a>
+                <button type="submit" name="actualizar_evento" class="btn btn-acreditador ml-2 w-25">Actualizar
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block moreJS %}
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+
+<script>
+
+    let sedes = document.getElementsByTagName("select");
+    sedes[0].classList.add("form-control")
+    sedes[1].classList.add("form-control")
+    sedes[2].classList.add("form-control")
+</script>
+{% endblock %}
