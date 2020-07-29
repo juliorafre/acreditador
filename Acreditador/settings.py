@@ -33,7 +33,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['131.221.32.116', 'localhost', '127.0.0.1']
 
 #'julio157freitas.pythonanywhere.com', 'localhost', '127.0.0.1'
-
+#hola 
 # Application definition
 
 INSTALLED_APPS = [
