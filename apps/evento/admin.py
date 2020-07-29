@@ -7,6 +7,8 @@ from import_export.admin import ImportExportActionModelAdmin
 
 admin.site.register(Evento)
 admin.site.register(ConfigEvento)
+admin.site.site_header = 'Administrador Acreditador'
+admin.site.site_title = 'Administrador Acreditador'
 
 
 class AsistenteResource(resources.ModelResource):

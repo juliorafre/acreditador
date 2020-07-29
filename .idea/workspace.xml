@@ -55,21 +55,24 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596037252253</updated>
-      <workItem from="1596037253052" duration="2631000" />
+      <workItem from="1596037253052" duration="3816000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="requirements.txt" />
+  </component>
   <component name="WindowStateProjectService">
-    <state x="2194" y="117" key="FileChooserDialogImpl" timestamp="1596037618515">
+    <state x="2194" y="117" key="FileChooserDialogImpl" timestamp="1596041302474">
       <screen x="1280" y="-280" width="1920" height="1080" />
     </state>
-    <state x="2194" y="117" key="FileChooserDialogImpl/1280.-280.1920.1080/0.0.1280.800@1280.-280.1920.1080" timestamp="1596037618515" />
-    <state x="1749" y="-101" key="SettingsEditor" timestamp="1596037621154">
+    <state x="2194" y="117" key="FileChooserDialogImpl/1280.-280.1920.1080/0.0.1280.800@1280.-280.1920.1080" timestamp="1596041302474" />
+    <state x="1749" y="-101" key="SettingsEditor" timestamp="1596041609863">
       <screen x="1280" y="-280" width="1920" height="1080" />
     </state>
-    <state x="1749" y="-101" key="SettingsEditor/1280.-280.1920.1080/0.0.1280.800@1280.-280.1920.1080" timestamp="1596037621154" />
+    <state x="1749" y="-101" key="SettingsEditor/1280.-280.1920.1080/0.0.1280.800@1280.-280.1920.1080" timestamp="1596041609863" />
   </component>
 </project>

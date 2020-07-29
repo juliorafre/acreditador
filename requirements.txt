@@ -1,0 +1,9 @@
+pip install django==2.1.1
+pip install django-import-export==1.0.1
+pip install xlwt==1.3.0
+pip install djangorestframework
+pip install xlrd
+pip install openpyxl
+pip install odfpy
+Pip install pyyaml
+pip install MarkupPy
