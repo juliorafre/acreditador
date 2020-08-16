@@ -8,6 +8,7 @@
 import datetime
 
 # Django
+from django.db import transaction
 from django.shortcuts import render, redirect
 from django.http import HttpResponse  # Excel
 from django.contrib.auth.decorators import login_required
@@ -28,11 +29,11 @@ from .resource import AsistenteResource
 from django.db.utils import IntegrityError
 
 # Models
-from .models import Evento, Asistente, ConfigEvento
 from django.contrib.auth.models import User
+from .models import Evento, Asistente, ConfigEvento, Profile
 
 # Forms
-from .forms import EventoForm, Asistenteform, ConfigEventoForm
+from .forms import EventoForm, Asistenteform, ConfigEventoForm, UserForm, ProfileForm
 
 
 @login_required
@@ -283,36 +284,72 @@ def acreditacionEventoView(request, codigo):
 
 
 @login_required
+@transaction.atomic
 def signup_view(request):
     """Vista de creacion de usuarios administradores"""
-    usuario = User.objects.filter(is_staff=True, is_superuser=False).all()
+    usuario = User.objects.filter(is_staff=True, is_superuser=False).all().select_related('profile')
     evento = Evento.objects.all()
 
-    if 'crear_usuario' in request.POST:
-        username = request.POST['username']
-        password = request.POST['password']
-        password_confirmation = request.POST['password_confirmation']
-        first_name = request.POST['first_name']
-        last_name = request.POST['last_name']
+    if request.method == 'POST':
+        user_form = UserForm(request.POST, instance=request.user)
+        profile_form = ProfileForm(request.POST, instance=request.user.profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            print("El nombre del usuario nuevo es: {}".format(profile_form.cleaned_data['area']))
+            # user_form.save()
+            # profile_form.save()
 
-        if password != password_confirmation:
-            messages.warning(request, 'Error en la confirmacion de contraseña. Intente de nuevo.')
-            return render(request, 'evento/signup.html', {'usuarios': usuario})
-
-        try:
             user = User.objects.create(
-                username=username,
-                first_name=first_name,
-                last_name=last_name,
-                is_staff=True
+                username=user_form.cleaned_data['username'],
+                is_staff=True,
+                first_name=user_form.cleaned_data['first_name'],
+                last_name=user_form.cleaned_data['last_name'],
+                email=user_form.cleaned_data['email'],
             )
-            user.set_password(password)
+            user.set_password(user_form.cleaned_data['password'])
             user.save()
-            messages.success(request, 'Usuario creado exitosamente.')
-        except IntegrityError:
-            messages.warning(request, 'El usuario ya existe!')
 
-    return render(request, 'evento/signup.html', {'usuarios': usuario, 'evento': evento})
+            user.profile.cargo = profile_form.cleaned_data['cargo']
+            user.profile.area = profile_form.cleaned_data['area']
+            user.profile.sede = profile_form.cleaned_data['sede']
+
+            user.save()
+
+            messages.success(request, 'Usuario creado exitosamente.')
+        else:
+            messages.warning(request, 'El usuario ya existe!')
+    else:
+        user_form = UserForm()
+        profile_form = ProfileForm()
+
+    # if 'crear_usuario' in request.POST:
+    #     username = request.POST['username']
+    #     password = request.POST['password']
+    #     password_confirmation = request.POST['password_confirmation']
+    #     first_name = request.POST['first_name']
+    #     last_name = request.POST['last_name']
+    #
+    #     if password != password_confirmation:
+    #         messages.warning(request, 'Error en la confirmacion de contraseña. Intente de nuevo.')
+    #         return render(request, 'evento/signup.html', {'usuarios': usuario})
+    #
+    #     try:
+    #         user = User.objects.create(
+    #             username=username,
+    #             first_name=first_name,
+    #             last_name=last_name,
+    #             is_staff=True
+    #         )
+    #         user.set_password(password)
+    #         user.save()
+    #         messages.success(request, 'Usuario creado exitosamente.')
+    #     except IntegrityError:
+    #         messages.warning(request, 'El usuario ya existe!')
+    # else:
+    #     user_form = UserForm()
+    #     profile_form = ProfileForm()
+
+    return render(request, 'evento/signup.html',
+                  {'usuarios': usuario, 'evento': evento, 'user_form': user_form, 'profile_form': profile_form})
 
 
 def eventoFormulario(request, id_evento):
@@ -355,11 +392,13 @@ def eventoFormulario(request, id_evento):
             asis.evento_id = id_evento
             try:
                 asis.save()
-                return render(request, 'evento/formulario_Confirmation_new.html', {'evento': evento, 'id_evento': id_evento})
+                return render(request, 'evento/formulario_Confirmation_new.html',
+                              {'evento': evento, 'id_evento': id_evento})
             except:
                 messages.warning(request, 'Problemas al inscribirse. Intente de nuevo mas tarde')
 
     return render(request, 'evento/formularioInscripcion.html', contexto)
+
 
 @login_required
 def cambiarDisponibilidad(request, id_evento):

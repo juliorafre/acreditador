@@ -1,10 +1,11 @@
 from django.contrib import admin
-from .models import Evento, Asistente, ConfigEvento
+from .models import Evento, Asistente, ConfigEvento, Profile
 from import_export import resources
 from import_export.admin import ImportExportActionModelAdmin
 
 # Register your models here.
 
+admin.site.register(Profile)
 admin.site.register(Evento)
 admin.site.register(ConfigEvento)
 admin.site.site_header = 'Administrador Acreditador'

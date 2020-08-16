@@ -36,6 +36,11 @@
 
                     <form action="{% url 'gestion-usuario' %}" method="post">
                         {% csrf_token %}
+{% comment %}
+                        <div style=" color: #525252"  >
+                            <h5 style="line-height: 10px" >Datos de sesion</h5>
+                            <hr>
+                        </div>
 
                         <div class="form-group">
                             <label for="id_username"><b>Nombre de usuario</b></label>
@@ -50,6 +55,12 @@
                             <input type="password" class="form-control" class="form-control" id="id_password_confirmation" placeholder="Confirmacion de contraseña" name="password_confirmation"
                                required="true">
                         </div>
+
+                        <div style="padding-top: 20px; color: #525252"  >
+                            <h5 style="line-height: 10px" >Datos de Usuario</h5>
+                            <hr>
+                        </div>
+
                         <div class="form-group">
                             <label for="id_first_name"><b>Nombre</b></label>
                             <input type="text" class="form-control" placeholder="Nombre" id="id_first_name" name="first_name" required="true">
@@ -57,7 +68,12 @@
                         <div class="form-group">
                             <label for="id_last_name"><b>Apellido</b></label>
                             <input type="text" class="form-control" placeholder="Apellido" id="id_last_name" name="last_name" required="true">
-                        </div>
+                        </div>{% endcomment %}
+
+                        <!-- Aqui abajo el form de profile -->
+
+                         {{ user_form.as_p }}
+                        {{ profile_form.as_p }}
                         <button type="submit" name="crear_usuario" class="btn btn-acreditador ml-2 w-25">Crear</button>
                     </form>
                 </div>
@@ -70,7 +86,7 @@
         <div class="contenedor">
             <div class="header_content">
                 <div class="info-titulo">
-                    <p class="titulo_conte">Getión de usuarios</p>
+                    <p class="titulo_conte">Gestión de usuarios</p>
                     <p class="titulo_descripcion">Aquí podra crear y visualizar todos los usuarios existentes en el sistema.</p>
                 </div>
 
@@ -114,7 +130,6 @@
                             </tr>
                         {% endfor %}
                     {% endif %}
-
                     </tbody>
                 </table>
             </div>

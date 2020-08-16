@@ -1,14 +1,35 @@
 """ Models Evento. """
 
 # Django
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractBaseUser, AbstractUser
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from . import choices
 import uuid
 
 
 def generate_config_id():
     return str(uuid.uuid4()).split("-")[-1]  # generate unique config id
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    cargo = models.CharField("Cargo", max_length=255, blank=True, null=True, editable=True, default="Sin Especificar")
+    area = models.CharField("Area", max_length=255, blank=True, null=True, editable=True, choices= choices.CHOICES_DIRECCION, default=choices.NP)
+    sede = models.CharField("Sede", max_length=255, blank=True, null=True, editable=True, choices= choices.CHOICES_SEDES, default=choices.NP)
+
+    def __str__(self):
+        return "Profile de {}".format(self.user.username)
+
+    @receiver(post_save, sender=User)
+    def create_user_profile(sender, instance, created, **kwargs):
+        if created:
+            Profile.objects.create(user=instance)
+
+    @receiver(post_save, sender=User)
+    def save_user_profile(sender, instance, **kwargs):
+        instance.profile.save()
 
 
 # MODEL'S
