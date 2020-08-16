@@ -2,13 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2160ed35-124f-4617-b101-378672ff3fee" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/acreditador.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/acreditador.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/evento/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/evento/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/evento/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/evento/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/evento/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/evento/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/evento/templates/evento/signup.html" beforeDir="false" afterPath="$PROJECT_DIR$/apps/evento/templates/evento/signup.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/evento/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/evento/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,7 +63,7 @@
       <updated>1596037252253</updated>
       <workItem from="1596037253052" duration="4817000" />
       <workItem from="1596407897137" duration="297000" />
-      <workItem from="1597498610244" duration="12984000" />
+      <workItem from="1597498610244" duration="13467000" />
     </task>
     <servers />
   </component>
